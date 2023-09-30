@@ -12,11 +12,12 @@ static const float fullscreen_bg[]         = {0.1, 0.1, 0.1, 1.0};
 static const int tagcount = TAGCOUNT;
 
 static const Rule rules[] = {
-	/* app_id     title       tags mask     isfloating   monitor */
-	/* examples:
-	{ "Gimp",     NULL,       0,            1,           -1 },
-	*/
-	{ "firefox",  NULL,       1 << 8,       0,           -1 },
+	/* app_id     		title       tags mask     isfloating  isterm  noswallow  monitor 
+    ** examples:
+	{ "Gimp",     		NULL,       0,            1,          0,      1,         -1 },
+ 	*/
+	{ "firefox",  		NULL,       1 << 8,       0,          0,      1,         -1 },
+	{ "alacritty", 	    NULL,       0,            0,          1,      1,         -1 },
 };
 
 /* layout(s) */
