@@ -273,6 +273,7 @@ static void maplayersurfacenotify(struct wl_listener *listener, void *data);
 static void mapnotify(struct wl_listener *listener, void *data);
 static void maximizenotify(struct wl_listener *listener, void *data);
 static void monocle(Monitor *m);
+static void movestack(const Arg *arg);
 static void dwindle(Monitor *mon);
 static void spiral(Monitor *mon);
 static void motionabsolute(struct wl_listener *listener, void *data);
@@ -1292,7 +1293,21 @@ focusstack(const Arg *arg)
 	Client *c, *sel = focustop(selmon);
 	if (!sel || sel->isfullscreen)
 		return;
-	if (arg->i > 0) {
+	/* If i == 0 select the first client */
+	if (arg->i == 0) {
+		wl_list_for_each(c, &clients, link) {
+			if (!VISIBLEON(c, selmon) || c->isfloating || c->isfullscreen)
+				continue;
+			break;
+		}
+	/* If i == INT_MAX select the last client */
+	} else if (arg->i == INT_MAX) {
+		wl_list_for_each_reverse(c, &clients, link) {
+			if (!VISIBLEON(c, selmon) || c->isfloating || c->isfullscreen)
+				continue;
+			break;
+		}
+	} else if (arg->i > 0) {
 		wl_list_for_each(c, &sel->link, link) {
 			if (&c->link == &clients)
 				continue; /* wrap past the sentinel node */
@@ -1637,6 +1652,47 @@ monocle(Monitor *m)
 	if ((c = focustop(m)))
 		wlr_scene_node_raise_to_top(&c->scene->node);
 }
+
+void movestack(const Arg *arg) {
+	Client *c, *sel = focustop(selmon);
+
+	if (wl_list_length(&clients) <= 1) {
+		return;
+	}
+	if (arg->i == 0) {
+		/* Put the selected client on top */
+		wl_list_remove(&sel->link);
+		wl_list_insert(&clients, &sel->link);
+		arrange(selmon);
+		return;
+	} else if (arg->i == INT_MAX) {
+		/* Get the last element */
+		wl_list_for_each_reverse(c, &clients, link) {
+			if (!VISIBLEON(c, selmon) || c->isfloating || c->isfullscreen)
+				continue;
+			break;
+		}
+	} else if (arg->i > 0) {
+		wl_list_for_each(c, &sel->link, link) {
+			if (VISIBLEON(c, selmon) || &c->link == &clients) {
+				break; /* found it */
+			}
+		}
+	} else {
+		wl_list_for_each_reverse(c, &sel->link, link) {
+			if (VISIBLEON(c, selmon) || &c->link == &clients) {
+				break; /* found it */
+			}
+		}
+		/* backup one client */
+		c = wl_container_of(c->link.prev, c, link);
+	}
+
+	wl_list_remove(&sel->link);
+	wl_list_insert(&c->link, &sel->link);
+	arrange(selmon);
+}
+
 
 void fibonacci(Monitor *mon, int s) {
 	unsigned int i=0, n=0, nx, ny, nw, nh;
