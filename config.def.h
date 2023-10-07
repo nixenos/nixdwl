@@ -32,12 +32,11 @@ static const Layout layouts[] = {
 
 /* monitors */
 static const MonitorRule monrules[] = {
-	/* name       mfact nmaster scale layout       rotate/reflect                x    y */
-	/* example of a HiDPI laptop monitor:
-	{ "eDP-1",    0.5,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
-	*/
 	/* defaults */
-	{ NULL,       0.55, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	/* name       mfact nmaster scale layout       rotate/reflect              x  y  resx resy rate 	adaptive*/
+	/* example of a HiDPI laptop monitor at 120Hz:
+	{ "eDP-1",    0.5,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, 0, 0, 0,   0,   120.000, 1}, */
+	{ NULL,       0.5,  1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, 0, 0, 0,   0,   0, 		0},
 };
 
 /* keyboard */
@@ -149,12 +148,12 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_period,     		focusmon,       	{.i = WLR_DIRECTION_RIGHT} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,       		tagmon,         	{.i = WLR_DIRECTION_LEFT} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,    		tagmon,         	{.i = WLR_DIRECTION_RIGHT} },
-	{ 0,		 				 XF86XK_AudioRaiseVolume, 	spawn,	 			{.v = micupvol } },
-	{ 0,		 				 XF86XK_AudioLowerVolume, 	spawn,	 			{.v = micdownvol } },
-	{ 0,		 				 XF86XK_AudioMute,	 		spawn,			 	{.v = micmute } },
+	{ 0,		 				 XF86XK_AudioRaiseVolume, 	spawn,	 			{.v = upvol } },
+	{ 0,		 				 XF86XK_AudioLowerVolume, 	spawn,	 			{.v = downvol } },
+	{ 0,		 				 XF86XK_AudioMute,	 		spawn,			 	{.v = mute } },
 	{ WLR_MODIFIER_SHIFT,		 XF86XK_AudioRaiseVolume, 	spawn,	 			{.v = micupvol } },
 	{ WLR_MODIFIER_SHIFT,		 XF86XK_AudioLowerVolume, 	spawn,	 			{.v = micdownvol } },
-	{ WLRMODIFIER_SHIFT,		 XF86XK_AudioMute,	 		spawn,			 	{.v = micmute } },
+	{ WLR_MODIFIER_SHIFT,		 XF86XK_AudioMute,	 		spawn,			 	{.v = micmute } },
 	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                     0),
 	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                         1),
 	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                 2),
