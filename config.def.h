@@ -14,6 +14,8 @@ static const int swipe_fingers_count       = 3;
 #define TAGCOUNT (9)
 static const int tagcount = TAGCOUNT;
 
+#include "shiftview.c"
+
 static const Rule rules[] = {
 	/* app_id     		title       tags mask     isfloating  isterm  noswallow  monitor 
     ** examples:
